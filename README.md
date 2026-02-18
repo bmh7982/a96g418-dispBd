@@ -41,7 +41,16 @@ MCU : A31T418GDN
 	1. 폴더명 변경
 		: Example_STKS-A96T418-GDN-TOUCH-A -> a96g418-dispBd
 	2. 구조 변경
-		: 
+		|- application 
+		  |- doc
+		  |- driver
+		  |- keil 
+		  |- library
+		  |- source
+		  |-  
+		  |-  
+
+		|- Driver(확장용) 
 	 	: a96T418_.c,h
 		: a96T418_.c,h
 
