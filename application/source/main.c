@@ -222,7 +222,7 @@ void main(void)
                 #endif
                 break;          
             case TASK_TOUCH :
-                Touch_Do_Task();
+                Touch_Do_Task();   // lib function
                 #if (WDT_ENABLE == 1)
                 WDT_ClearCountData();
                 #endif           
@@ -234,6 +234,7 @@ void main(void)
                     ts.flag.touch_sensing_end = 0;
                 }
             case TASK_GESTURE :
+				//항상 실행하지 않음
                 #if (SLIDE_FUNCTION_EN | WHEEL_FUNCTION_EN)
                 GESTURE_Do_Task(&diff_data[0]);
                 #endif
