@@ -1,0 +1,557 @@
+=== PAGE 216 ===
+15. LED Driver  A96T418 User's Manual 
+ 
+216 
+ Register Map 
+ 
+Table 37. LED Driver Register Map 
+ 
+Name Address Direction Default Description 
+COMOE 2F00H R/W 00H LED COM Output Enable Register 
+SEGOE1 2F01H R/W 00H LED SEG Output Enable 1 Register 
+SEGOE2 2F02H R/W 00H LED SEG Output Enable 2 Register 
+PRESD 2F03H R/W 00H LED Prescale Data Register 
+CSER 2F04H R/W 00H LED COM or SEG Enable Register 
+COMPWID 2F05H R/W 00H LED COM Pulse Width Control Register 
+STPD0 2F0AH R/W 00H LED Stop Duration 0 Register 
+STPD1 2F0BH R/W 00H LED Stop Duration 1 Register 
+STPD2 2F0CH R/W 00H LED Stop Duration 2 Register 
+LEDSR 2F0DH R/W 01H LED Status Register 
+LEDCON3 2F0EH R/W 00H LED Control3 Register 
+LEDCON2 2F0FH R/W 00H LED Control 2 Register 
+LEDCON1 2F10H R/W 00H LED Control 1 Register 
+CCLSR 2F30H R/W 01H Constant Current level select Register  
+TEST_COM 2F7CH R/W 00H COM Register for test 
+TEST_SEG0 2F7DH R/W 00H SEG Register for test 
+TEST_SEG1 2F7EH R/W 00H SEG Register for test 
+ 
+ 
+  
+
+=== PAGE 217 ===
+A96T418 User's Manual  15. LED Driver 
+ 
+217 
+ 
+ Register Description for LED Driver 
+ 
+COMOE (LED COM Output Enable Register): 2F00H 
+7 6 5 4 3 2 1 0 
+COMOE7 COMOE6 COMOE5 COMOE4 COMOE3 COMOE2 COMOE1 COMOE0 
+R/W R/W R/W R/W R/W R/W R/W R/W 
+Initial value: 00H 
+COMOE7 COM7 Output Enable 
+0 Disable 
+1 Enable 
+COMOE6 COM6 Output Enable 
+0 Disable 
+1 Enable 
+COMOE5 COM5 Output Enable 
+0 Disable 
+1 Enable 
+COMOE4 COM4 Output Enable 
+0 Disable 
+1 Enable 
+COMOE3 COM3 Output Enable 
+0 Disable 
+1 Enable 
+COMOE2 COM2 Output Enable 
+0 Disable 
+1 Enable 
+COMOE1 COM1 Output Enable 
+0 Disable 
+1 Enable 
+COMOE0 COM0 Output Enable 
+0 Disable 
+1 Enable 
+ 
+  
+
+=== PAGE 218 ===
+15. LED Driver  A96T418 User's Manual 
+ 
+218 
+SEGOE1 (LED SEG Output Enable 1 Register): 2F01H 
+7 6 5 4 3 2 1 0 
+SEGOE1.7 SEGOE1.6 SEGOE1.5 SEGOE1.4 SEGOE1.3 SEGOE1.2 SEGOE1.1 SEGOE1.0 
+R/W R/W R/W R/W R/W R/W R/W R/W 
+Initial value: 00H 
+SEGOE1.7 SEG7 Output Enable 
+0 Disable 
+1 Enable 
+SEGOE1.6 SEG6 Output Enable 
+0 Disable 
+1 Enable 
+SEGOE1.5 SEG5 Output Enable 
+0 Disable 
+1 Enable 
+SEGOE1.4 SEG4 Output Enable 
+0 Disable 
+1 Enable 
+SEGOE1.3 SEG3 Output Enable 
+0 Disable 
+1 Enable 
+SEGOE1.2 SEG2 Output Enable 
+0 Disable 
+1 Enable 
+SEGOE1.1 SEG1 Output Enable 
+0 Disable 
+1 Enable 
+SEGOE1.0 SEG0 Output Enable 
+0 Disable 
+1 Enable 
+ 
+  
+
+=== PAGE 219 ===
+A96T418 User's Manual  15. LED Driver 
+ 
+219 
+SEGOE2 (LED SEG Output Enable 2 Register): 2F02H 
+7 6 5 4 3 2 1 0 
+SEGOE2.7 SEGOE2.6 SEGOE2.5 SEGOE2.4 SEGOE2.3 SEGOE2.2 SEGOE2.1 SEGOE2.0 
+R/W R/W R/W R/W R/W R/W R/W R/W 
+Initial value: 00H 
+SEGOE2.7 SEG15 Output Enable 
+0 Disable 
+1 Enable 
+SEGOE2.6 SEG14 Output Enable 
+0 Disable 
+1 Enable 
+SEGOE2.5 SEG13 Output Enable 
+0 Disable 
+1 Enable 
+SEGOE2.4 SEG12 Output Enable 
+0 Disable 
+1 Enable 
+SEGOE2.3 SEG11 Output Enable 
+0 Disable 
+1 Enable 
+SEGOE2.2 SEG10 Output Enable 
+0 Disable 
+1 Enable 
+SEGOE2.1 SEG9 Output Enable 
+0 Disable 
+1 Enable 
+SEGOE2.0 SEG8 Output Enable 
+0 Disable 
+1 Enable 
+PRESD (LED Prescale Data Register): 2F03H  
+7 6 5 4 3 2 1 0 
+PRESD7 PRESD6 PRESD5 PRESD4 PRESD3 PRESD2 PRESD1 PRESD0 
+R/W R/W R/W R/W R/W R/W R/W R/W 
+Initial value: 00H 
+PRESD[7:0] Prescale value of LED Clock 
+LED Clock = fCLK / (PRESD + 1) 
+(fCLK is a selected input clock) 
+ 
+  
+
+=== PAGE 220 ===
+15. LED Driver  A96T418 User's Manual 
+ 
+220 
+CSER (LED COM or SEG Enable Register): 2F04H  
+7 6 5 4 3 2 1 0 
+CS_SEL7 CS_SEL6 CS_SEL5 CS_SEL4 CS_SEL3 CS_SEL2 CS_SEL1 CS_SEL0 
+R/W R/W R/W R/W R/W R/W R/W R/W 
+Initial value: 00H 
+CS_SEL7 Select COM7/SEG7 
+0 Select SEG7 
+1 Select COM7  
+CS_SEL6 Select COM6/SEG6 
+0 Select SEG6 
+1 Select COM6 
+CS_SEL5 Select COM5/SEG5  
+0 Select SEG5 
+1 Select COM5 
+CS_SEL4 Select COM4/SEG4 
+0 Select SEG4 
+1 Select COM4 
+CS_SEL3 Select COM3/SEG3 
+0 Select SEG3 
+1 Select COM3 
+CS_SEL2 Select COM2/SEG2 
+0 Select SEG2 
+1 Select COM2 
+CS_SEL1 Select COM1/SEG1 
+0 Select SEG1 
+1 Select COM1 
+CS_SEL0 Select COM0/SEG0  
+0 Select SEG0 
+1 Select COM0 
+ 
+COMPWID (LED COM Pulse Width Control Register): 2F05H  
+7 6 5 4 3 2 1 0 
+COMPWID7 COMPWID6 COMPWID5 COMPWID4 COMPWID3 COMPWID2 COMPWID1 COMPWID0 
+R/W R/W R/W R/W R/W R/W R/W R/W 
+Initial value: 00H 
+COMPWID[7:0] Maximum Pulse width for COM 
+COM Width = LED CLK / (COMPWID + 1) 
+(LED CLK is a Prescaler output clock) 
+ 
+  
+
+=== PAGE 221 ===
+A96T418 User's Manual  15. LED Driver 
+ 
+221 
+STPD0 (LED stop Duration 0 Register): 2F0AH  
+7 6 5 4 3 2 1 0 
+STPD7 STPD6 STPD5 STPD4 STPD3 STPD2 STPD1 STPD0 
+R/W R/W R/W R/W R/W R/W R/W R/W 
+Initial value: 00H 
+STPD1 (LED stop Duration 1 Register): 2F0BH  
+7 6 5 4 3 2 1 0 
+STPD15 STPD14 STPD13 STPD12 STPD11 STPD10 STPD9 STPD8 
+R/W R/W R/W R/W R/W R/W R/W R/W 
+Initial value: 00H 
+STPD2 (LED stop Duration 2 Register): 2F0CH  
+7 6 5 4 3 2 1 0 
+- - - - STPD19 STPD18 STPD17 STPD16 
+- - - - R/W R/W R/W R/W 
+Initial value: 00H 
+STPD[19:0] LED stop duration. These registers are valid in LED Stop Count mode or 
+smart share mode. 
+LED Stop Duration Width = fCLK / (STPD + 1) 
+(fCLK is a selected input clock) 
+ 
+LEDSR (LED Status Register): 2F0DH  
+7 6 5 4 3 2 1 0 
+- - - - MATCHF LED_INT LED_INTE LED_ENDF 
+- - - - R/W R/W R/W R/W 
+Initial value: 01H 
+MATCHF This bit is set when the value of internal counter becomes the same with 
+STPD register. After LED display, this bit will be cleared automatically. 
+0 Unmatched 
+1 Matched 
+LED_INT LED Interrupt flag when LED_INTE is set. 
+0 LED interrupt not generated 
+1 LED interrupt generated 
+LED_INTE LED Interrupt Enable 
+0 Disable 
+1 Enable 
+LED_ENDF LED Operation Flag 
+0 Under LED Operation 
+1 LED Operation is ended 
+ 
+  
+
+=== PAGE 222 ===
+15. LED Driver  A96T418 User's Manual 
+ 
+222 
+LEDCON3 (LED Control 3 Register): 2F0EH 
+7 6 5 4 3 2 1 0 
+SET_TIME3 SET_TIME2 SET_TIME1 SET_TIME0 CLR_TIME3 CLR_TIME2 CLR_TIME1 CLR_TIME0 
+R/W R/W R/W R/W R?W- R/W- R/W R/W 
+Initial value: 00H 
+SET_TIME[3:0] SEG GND Start position These bits are valid only when  
+SRTEN(LEDCON2[3]) is High. fCLK = 16MHZ 
+0000         1us 
+0001         2us  
+0010         4us 
+0011         6us 
+0100            8us 
+0101          
+0110                    
+0111 
+1000 
+1001 
+1010 
+1011 
+1100 
+1101 
+1110 
+1111 
+ 
+     10us 
+     12us 
+     14us 
+     16us 
+     18us 
+     20us 
+     22us 
+     24us 
+     26us 
+     28us 
+     32us 
+CLR_TIME[3:0]         
+              
+                   
+SEG GND Start position These bits are valid only when  
+SRTEN(LEDCON2[3]) is High. fCLK = 16MHZ,  
+OVERTS is bit[6:4] of LEDCON2  
+0000       OVERTS – 1us 
+0001       OVERTS – 2us   
+0010       OVERTS – 4us  
+0011       OVERTS – 6us  
+0100       OVERTS – 8us  
+ 0101       OVERTS – 10us  
+ 0110       OVERTS – 12us  
+ 0111       OVERTS – 14us  
+ 1000       OVERTS – 16us 
+1001       OVERTS – 18us 
+1010       OVERTS – 20us 
+1011       OVERTS – 22us 
+1100       OVERTS – 24us 
+1101       OVERTS – 26us 
+1110       OVERTS – 28us 
+1111       OVERTS – 32us 
+ 
+ 
+  
+
+=== PAGE 223 ===
+A96T418 User's Manual  15. LED Driver 
+ 
+223 
+LEDCON2 (LED Control 2 Register): 2F0FH 
+7 6 5 4 3 2 1 0 
+OVERLAP OVERTS2 OVERTS1 OVERTS0 SRTEN - - - 
+R/W R/W R/W R/W - - - - 
+Initial value: 00H 
+OVERLAP How to make Overlap Time 
+0 Overlap time = 3us ~ 64us @ fCLK = 16MHZ 
+1 Overlap time = fCLK/2 
+OVERTS[2:0]         
+              
+                   
+OVERLAP TIME SELECT. These bits are valid only when 
+OVERLAP is LOW. 
+000          64us   
+001          32us   
+010          24us   
+011          21us   
+ 100          12us   
+ 101          9us   
+ 110          6us   
+ 111          3us   
+SRTEN SEG GND Select 
+0 non select 
+1 Select 
+   
+LEDCON1 (LED Control 1 Register): 2F10H 
+7 6 5 4 3 2 1 0 
+- - - MD2 MD1 MD0 LEDEN LEDST 
+- - - R/W R/W R/W R/W R/W 
+Initial value: 00H 
+MD[2:0] Mode Select 
+000 LED Auto Mode 
+001 Hand Shake Mode 
+010 LED STOP Count Mode  
+011 Smart Share Mode 
+                 1xx      LED Alone Mode 
+LEDEN LED Enable 
+0 LED Disable 
+1 LED Enable 
+LEDST LED Start or Stop under LEDEN = 1 
+0 Stop LED Operation 
+1 Start LED Operation 
+ 
+  
+
+=== PAGE 224 ===
+15. LED Driver  A96T418 User's Manual 
+ 
+224 
+CCLSR (Constant Current Level Select Register): 2F30H 
+7 6 5 4 3 2 1 0 
+- - - - - - COA1 COA0 
+- - - - - - R/W R/W 
+Initial value: 01H 
+COA[1:0] SEG(mA) 
+00         8.66mA 
+01         13.22mA (default) 
+10         19.49mA 
+11         22.06mA 
+ 
+TEST_COM (TEST COM Register for Test): 2F7CH  
+7 6 5 4 3 2 1 0 
+TCOM7 TCOM6 TCOM5 TCOM4 TCOM3 TCOM2 TCOM1 TCOM0 
+R/W R/W R/W R/W R/W R/W R/W R/W 
+Initial value: 00H 
+ 
+TEST_SEG0 (TEST SEG Low Byte Register for Test): 2F7DH  
+7 6 5 4 3 2 1 0 
+TSEG07 TSEG06 TSEG05 TSEG04 TSEG03 TSEG02 TSEG01 TSEG00 
+R/W R/W R/W R/W R/W R/W R/W R/W 
+Initial value: 00H 
+ 
+TEST_SEG0 (TEST SEG High Byte Register for Test): 2F7EH  
+7 6 5 4 3 2 1 0 
+TSEG17 TSEG16 TSEG15 TSEG14 TSEG13 TSEG12 TSEG11 TSEG10 
+R/W R/W R/W R/W R/W R/W R/W R/W 
+Initial value: 00H 
+ 
+  
+
+=== PAGE 225 ===
+A96T418 User's Manual  15. LED Driver 
+ 
+225 
+ LED RAM 
+Table 38. LED RAM 
+Address bit7/15 bit6/14 bit5/13 bit4/12 bit3/11 bit2/10 bit1/9 bit0/8 
+2F13H COM0L SEG7 SEG6 SEG5 SEG4 SEG3 SEG2 SEG1 - 
+2F14H COM0H SEG15 SEG14 SEG13 SEG12 SEG11 SEG10 SEG9 SEG8 
+2F15H COM1L SEG7 SEG6 SEG5 SEG4 SEG3 SEG2 - SEG0 
+2F16H COM1H SEG15 SEG14 SEG13 SEG12 SEG11 SEG10 SEG9 SEG8 
+2F17H COM2L SEG7 SEG6 SEG5 SEG4 SEG3 - SEG1 SEG0 
+2F18H COM2H SEG15 SEG14 SEG13 SEG12 SEG11 SEG10 SEG9 SEG8 
+2F19H COM3L SEG7 SEG6 SEG5 SEG4 - SEG2 SEG1 SEG0 
+2F1AH COM3H SEG15 SEG14 SEG13 SEG12 SEG11 SEG10 SEG9 SEG8 
+2F1BH COM4L SEG7 SEG6 SEG5 - SEG3 SEG2 SEG1 SEG0 
+2F1CH COM4H SEG15 SEG14 SEG13 SEG12 SEG11 SEG10 SEG9 SEG8 
+2F1DH COM5L SEG7 SEG6 - SEG4 SEG3 SEG2 SEG1 SEG0 
+2F1EH COM5H SEG15 SEG14 SEG13 SEG12 SEG11 SEG10 SEG9 SEG8 
+2F1FH COM6L SEG7 - SEG5 SEG4 SEG3 SEG2 SEG1 SEG0 
+2F20H COM6H SEG15 SEG14 SEG13 SEG12 SEG11 SEG10 SEG9 SEG8 
+2F21H COM7L - SEG6 SEG5 SEG4 SEG3 SEG2 SEG1 SEG0 
+2F22H COM7H SEG15 SEG14 SEG13 SEG12 SEG11 SEG10 SEG9 SEG8 
+“-“ means no affect to SEG output 
+  
+
+=== PAGE 226 ===
+15. LED Driver  A96T418 User's Manual 
+ 
+226 
+ Example Circuit 
+15.6.1 T-Type Matrix 
+ 
+Figure 106. T-Type Matrix 
+ 
+  
+
+
+=== PAGE 227 ===
+A96T418 User's Manual  15. LED Driver 
+ 
+227 
+15.6.2 M-Type Matrix 
+ 
+Figure 107. M-Type Matrix 
+ 
+  
+
+
+=== PAGE 228 ===
+15. LED Driver  A96T418 User's Manual 
+ 
+228 
+15.6.3 Circuit for LED and Touch by common pin 
+When implementing touch and LED functions on a common pin by time -division, the touch sensitivity may be very 
+poor du to the parasitic capacitance caused by LED matrix structure. This problem can be minimalized by adding a 
+diode in front of the LED matrix. Refer to the diode's capacitance specification, and select a diode less than 4pF. It 
+is recommended to use the following circuit and diodes. 
+ 
+ 
+Figure 108. Circuit for LED and Touch by common pin 
+ 
+Table 39. Recommended diodes 
+ 
+No IC-NAME VENDOR Capacitance 
+1 1N4148-B RECTRON 4pF 
+2 1N4148W TAIWAN SEMI 4pF 
+3 1N4148W-7-F DIODES 2pF 
+4 1N4148W-E3-08 VISHAY 4pF 
+5 1N4148W-G3-18 VISHAY 4pF 
+6 1N4148WS ON SEMI 4pF 
+7 1N4148WSF-7 DIODES 1.5pF 
+ 
+ 
+  
+
+
+=== PAGE 229 ===
+A96T418 User's Manual  15. LED Driver 
+ 
+229 
+ Mode Functions 
+By depending on how set MD values (LEDCON1[4:2]), there are fifth operation modes. 
+15.7.1 LED AUTO Mode 
+First mode is LED auto mode irrelevant to touch sensing function that can start by write “1” LEDST by program. 
+Below all mode is possible only after LEDEN (LEDCON1[1])is set “1”. 
+Figure 109 show the LED auto mode in case of CSER = 0100_0001B. (k) shows the overlaptime that exists between 
+the COM and the COM that are controllable by the program.  
+When enabling the LED by write LEDST “1” as in (A), LED can operate contiually.. 
+An interrupt occurs at point (B) where the LED 1 frame operation terminated when LED_INTE is set. 
+ 
+ 
+Figure 109. LED auto Mode 
+  
+
+
+=== PAGE 230 ===
+15. LED Driver  A96T418 User's Manual 
+ 
+230 
+15.7.2 LED Alone Mode 
+First mode is LED alone mode irrelevant to touch sensing function that can re-start by write “1” LEDST by program. 
+Figure 110 show the LED alone mode in case of C SER = 0100_0001B. (k) shows the overlaptime that exists 
+between the COM and the COM that are controllable by the program.  
+An interrupt occurs at point (A) where the LED operation terminated when LED_INTE is set. 
+When enabling the LED by rewrite LEDST “1” as in (B), LED can starts again. 
+ 
+ 
+Figure 110. LED alone Mode 
+  
+
+
+=== PAGE 231 ===
+A96T418 User's Manual  15. LED Driver 
+ 
+231 
+ 
+15.7.3 Hand Shake Mode 
+The second mode is hand shake mode to inform the touch when the LED is finished and to make LED start again 
+by the TOUCH_END signal from the touch sensing. 
+Figure 111 show the hand shake mode in the case of CSER = 0000_0001B. Frame cycle is defined by sum of LED 
+operation (1) and touch key scan (2). It is the minimum cycle without flicker. 
+An interrupt occurs at point (A) where the LED operation terminated when LED_INTE is set. 
+Touch sensing continues to send the “1” until LED_ENDF changes to “0” in (B), and then LED start again. 
+ 
+ 
+ 
+Figure 111. Hand Shake Mode 
+  
+
+
+=== PAGE 232 ===
+15. LED Driver  A96T418 User's Manual 
+ 
+232 
+15.7.4 LED Stop Count Mode 
+The third mode is LED stop count mode that the beginning of the next LED operation is determined by LED stop 
+duration register value after the previous LED operation end. 
+It is need when deciding the period of frame that LED can operate without flicker. 
+Figure 112 show LED STOP Count mode in case of CSER = 1000_0000B. An interrupt occurs at point (A) here the 
+LED operation terminated when LED_INTE is set. 
+At the same time, 20-bit counter starts to increase by the internal enable bit. If 20-bit LEDSTPD register is matched 
+with the counter, MATCHF(bit3 of LEDSR) is set “1”. LED_ENDF is cleared “0”, 20-bit counter is cleared “0” and 
+LED start again as in (B). 
+ 
+Figure 112. LED Stop Count Mode 
+15.7.5 Smart Share Mode 
+The fourth mode is smart share mode that the beginning of the next LED operation can ’t  do until current pending 
+touch key scan ends although MATCHF (LEDSR[3]) generate after the previous LED operation end. 
+It is need when as many as touch key scan want to be executed during touch key scan time.  
+Figure 113 show smart share mode in case of CSER = 1000_0000B. An interrupt occurs at point (A) here the LED 
+operation terminated when LED_INTE is set. At the same time, 20 -bit counter starts to increase by the internal 
+enable bit although 20-bit STPD register is matched with the counter and then MATCHF ( LEDSR[3]) is set “1”. 
+LED_ENDF can’t clear “0” and LED can’t start again until the TOUCH_END signal from the touch sensing is active. 
+If any more LED display is not needed, it is highly recommended LEDEN (LEDCON1[1]) setting as “0” to be 
+executed between the end of LED operation (A) and LED restart (B) to prevent flicker. 
+
+
+=== PAGE 233 ===
+A96T418 User's Manual  15. LED Driver 
+ 
+233 
+                                         
+ 
+Figure 113. Smart Share Mode 
+ 
+  
+
+
