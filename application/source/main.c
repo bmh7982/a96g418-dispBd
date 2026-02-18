@@ -204,9 +204,9 @@ void main(void)
     
     Init_User_Function();
     
-#if (UL60730_SELF_TEST_EN == 1)
+    #if (UL60730_SELF_TEST_EN == 1)
     user.ul60730_post_result = UL60730_selfTest_init(ts.actv_ch_bit);              /* UL60730 Power On self test */  
-#endif
+    #endif
 
     EI();
 
@@ -217,34 +217,34 @@ void main(void)
         switch (task)
         {           
             case TASK_LED :
-#if (LED_DRV_EN  == 1)
+                #if (LED_DRV_EN  == 1)
                 LED_Do_Task();
-#endif
+                #endif
                 break;          
             case TASK_TOUCH :
                 Touch_Do_Task();
-#if (WDT_ENABLE == 1)
+                #if (WDT_ENABLE == 1)
                 WDT_ClearCountData();
-#endif           
+                #endif           
                 if (ts.flag.touch_sensing_end == 1)
                 {
-#if ((HOLD_KEY_RELEASE | MULTI_KEY_RESET | FIRST_KEY_PRIORITY) == 1)
+                    #if ((HOLD_KEY_RELEASE | MULTI_KEY_RESET | FIRST_KEY_PRIORITY) == 1)
                     Touch_Key_Scenario();
-#endif
+                    #endif
                     ts.flag.touch_sensing_end = 0;
                 }
             case TASK_GESTURE :
-#if (SLIDE_FUNCTION_EN | WHEEL_FUNCTION_EN)
+                #if (SLIDE_FUNCTION_EN | WHEEL_FUNCTION_EN)
                 GESTURE_Do_Task(&diff_data[0]);
-#endif
+                #endif
                 break;
             case TASK_DEBUG :
-#if (UART_ENABLE == 1)
+                #if (UART_ENABLE == 1)
                 DBG_Do_Task();
-#endif
-#if (I2C_ENABLE == 1)
+                #endif
+                #if (I2C_ENABLE == 1)
                 DBG_Do_Task_I2C();
-#endif
+                #endif
                 break;
             default :
                 break;
@@ -256,7 +256,7 @@ void main(void)
             task = TASK_LED;
         }
 
-#if (UL60730_SELF_TEST_EN == 1)
+        #if (UL60730_SELF_TEST_EN == 1)
         if(ts.flag.ts_status == TS_COMPLETE)
         { 
             if( (g_sys_flag.led_en == 1) && (g_sys_flag.time_div == 1) )
@@ -275,7 +275,7 @@ void main(void)
                 LEDCON1 |= 0x01; 
             }
         }
-#endif
+        #endif
 
     }
 }
