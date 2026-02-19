@@ -188,7 +188,7 @@ void DBG_Init_UART (void)
              (0<<0);    /* 1: Parity Error Detected                                                                         */
 
     //USI0BD = DBG_BAUD_RATE;
-    USI0DR = 0;         /* clear ¾ÈÇØÁÖ¸é Ã³À½ ÀÌ»óÇÑ °ª Ãâ·Â*/ 
+    USI0DR = 0;         /* clear ï¿½ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ Ã³ï¿½ï¿½ ï¿½Ì»ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½*/ 
 
     IE1 |= BIT(3);
 }
@@ -279,8 +279,13 @@ uint8_t DBG_RX_Check(uint8_t **ptr)
                 }
                 break;                      
             case DBG_RX_STEP_DATA :                         /* MSG */
-                rx_data_buf[rx_data_idx++] = temp;  // °æ°è °Ë»ç ¾øÀ½
-													// ETX°¡ ¾È ¿À¸é DBG_RX_MSG_SIZE ÃÊ°ú ¡æ ½ºÅÃ/º¯¼ö µ¤¾î¾²±â
+                if (rx_data_idx >= DBG_RX_MSG_SIZE)         /* RX buffer overflow guard */
+                {
+                    rx_data_idx = 0;
+                    rx_step = DBG_RX_STEP_STX;
+                    break;
+                }
+                rx_data_buf[rx_data_idx++] = temp;
                 if (temp == DBG_SMARTKEY_SET_ETX)
                 {
                     rx_step = DBG_RX_STEP_STX;
@@ -333,8 +338,12 @@ void DBG_Init_Variable(void)
  *********************************************************************/
 void Make_Packet_Byte(uint8_t dat)
 {
+    if (uart.tx_write_idx >= DBG_TX_BUFF_SIZE)      /* TX buffer overflow guard */
+    {
+        return;
+    }
     uart.tx_queue[uart.tx_write_idx++] = dat;
-    uart.tx_checksum += (uint16_t)(0x00ff & dat);   
+    uart.tx_checksum += (uint16_t)(0x00ff & dat);
 }
 /** *******************************************************************
  * @brief       move two byte to tx-buffer
@@ -344,6 +353,10 @@ void Make_Packet_Byte(uint8_t dat)
  *********************************************************************/
 void Make_Packet_Word(uint16_t dat)
 {
+    if (uart.tx_write_idx + 1 >= DBG_TX_BUFF_SIZE)  /* TX buffer overflow guard */
+    {
+        return;
+    }
     uart.tx_queue[uart.tx_write_idx++] = (uint8_t)(dat>>8);
     uart.tx_queue[uart.tx_write_idx++] = (uint8_t)(dat>>0);
     uart.tx_checksum += (uint16_t)(0x00ff & (dat>>8));
@@ -359,7 +372,8 @@ void Make_Packet_Word(uint16_t dat)
 void DBG_Send_Data(void)
 {
     uint8_t i;
-    uint8_t len;            /* Keil:Optimization - Level 7AI¡ío¢¯¢®¨ù¡© i ¢¯I A©¡¥ì©ö */
+    uint8_t end_idx;
+    uint8_t len;            /* Keil:Optimization - Level 7AIï¿½ï¿½oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ i ï¿½ï¿½I Aï¿½ï¿½ï¿½ï¿½ï¿½ */
     uint8_t shift_bit;
     uint8_t mask_cnt;
 
@@ -393,7 +407,13 @@ void DBG_Send_Data(void)
     Make_Packet_Byte(ts.touch_lib_ver);         /* cyle[1] */
 
 
-    for (i = dbg.start_idx; i < dbg.start_idx+dbg.ch_cnt; i++)  
+    /* Clamp channel loop range to valid touch channel count */
+    end_idx = dbg.start_idx + dbg.ch_cnt;
+    if (end_idx > ts.actv_ch_cnt)
+    {
+        end_idx = ts.actv_ch_cnt;
+    }
+    for (i = dbg.start_idx; i < end_idx; i++)
     {   
         if (dbg.mask & DBG_DATA0)                
         {
@@ -449,11 +469,14 @@ void DBG_Send_Data(void)
     }
     #endif
 
-    uart.tx_checksum = ((~uart.tx_checksum)&0x00ffff)-1;    
-    uart.tx_queue[uart.tx_write_idx++] = (uint8_t)(uart.tx_checksum>>8);
-    uart.tx_queue[uart.tx_write_idx++] = (uint8_t)(uart.tx_checksum>>0);
-    uart.tx_queue[uart.tx_write_idx++] = DBG_SMARTKEY_GET_CR;
-    uart.tx_queue[uart.tx_write_idx++] = DBG_SMARTKEY_GET_LF;
+    uart.tx_checksum = ((~uart.tx_checksum)&0x00ffff)-1;
+    if (uart.tx_write_idx + 3 < DBG_TX_BUFF_SIZE)          /* tail write overflow guard */
+    {
+        uart.tx_queue[uart.tx_write_idx++] = (uint8_t)(uart.tx_checksum>>8);
+        uart.tx_queue[uart.tx_write_idx++] = (uint8_t)(uart.tx_checksum>>0);
+        uart.tx_queue[uart.tx_write_idx++] = DBG_SMARTKEY_GET_CR;
+        uart.tx_queue[uart.tx_write_idx++] = DBG_SMARTKEY_GET_LF;
+    }
         
     IE1 |= BIT(4);
     USI0DR = uart.tx_queue[uart.tx_read_idx++];

@@ -174,8 +174,8 @@ void Init_User_Function(void)
 #endif
 
 #if (WDT_ENABLE == 1)
-    WDT_Initial(WDT_FREE_RUN, WDT_BIT_OVER);
-    WDT_Set_4sec_Reset();
+    WDT_Initial(WDT_FREE_RUN, WDT_BIT_OVER);   // 이것은 아래함수 때문에 의미가 없다.
+    WDT_Set_4sec_Reset();   // 이것은 WDT_Initial() 함수의 WDTCR을 지우기 때문에 
     WDT_ConfigureInterrupt(WDT_INT_EN);
     WDT_Start();
 #endif

@@ -221,6 +221,10 @@ void LED_Renew_Data(void)
     for (num_idx = 0; num_idx < 4; num_idx++)
     {
         digit[num_idx] = ((ts.detect_key>>(num_idx*4)) & 0x0f);
+        if (digit[num_idx] > 9)             /* clamp: t_type_digit[][10][] only holds 0-9 */
+        {
+            digit[num_idx] = 0;
+        }
     }
     for (num_idx = 0; num_idx < 4; num_idx++)       /* 4DIGIT */
     {
@@ -287,7 +291,7 @@ void LED_Init_Reg(void)
 
     //PRESD  = 255;     // led clock prescale, 16MHz/(PRESD+1), if 255, 62.5Khz, 16us   
     //COMPWID = 70;     // COM width, led clock/(COMPWID+1) 
-//###GUN : 201007 - TEST_SEG0=0x00, DIMM_MINUS=0x00 -> TEST_SEG0=0xff, DIMM_MINUS=0x11 ·Î ¼öÁ¤ 
+//###GUN : 201007 - TEST_SEG0=0x00, DIMM_MINUS=0x00 -> TEST_SEG0=0xff, DIMM_MINUS=0x11 ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
     TEST_SEG0 = 0xff;
     CDIMM0 =    (DIMM_MINUS<<4) |       /* COM1 dimming(-) */
                 (DIMM_MINUS<<0);        /* COM0 */

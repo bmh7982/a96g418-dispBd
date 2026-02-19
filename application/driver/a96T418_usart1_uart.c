@@ -225,8 +225,8 @@ void USART1_SendDataWithInterrupt(uint8_t send_data)
         }
         USART1_ConfigureInterrupt(USART1_TX_COMPLETE_INT, FALSE);
         
-        USART1_tx_queue [ USART1_tx_rear ] = send_data;             
-        USART1_tx_rear = ++USART1_tx_rear % USART1_QUEUE_SIZE;                      
+        USART1_tx_queue [ USART1_tx_rear ] = send_data;
+        USART1_tx_rear = (USART1_tx_rear + 1) % USART1_QUEUE_SIZE;                      
         USART1_ConfigureInterrupt(USART1_TX_COMPLETE_INT, TRUE);
         
         UCTRL2 |= (UDRIE);  
@@ -265,7 +265,7 @@ uint8_t USART1_ReceiveDataWithInterrupt(void)
     USART1_ConfigureInterrupt(USART1_RX_COMPLETE_INT, FALSE);
     temp = USART1_rx_queue [ USART1_rx_front ];
 
-    USART1_rx_front = ++USART1_rx_front % USART1_QUEUE_SIZE;
+    USART1_rx_front = (USART1_rx_front + 1) % USART1_QUEUE_SIZE;
     USART1_ConfigureInterrupt(USART1_RX_COMPLETE_INT, TRUE);
 
     return temp;
@@ -458,10 +458,10 @@ void USART1_RXInt_Handler() interrupt USART1_RX_VECT
         if ((temp & DOR )||(temp & FE )||(temp & PE ))
         {
             USART1_rx_queue [ USART1_rx_rear ] = UDATA;
-            USART1_rx_rear = ++USART1_rx_rear % USART1_QUEUE_SIZE;
+            USART1_rx_rear = (USART1_rx_rear + 1) % USART1_QUEUE_SIZE;
         }
         USART1_rx_queue [ USART1_rx_rear ] = UDATA;
-        USART1_rx_rear = ++USART1_rx_rear % USART1_QUEUE_SIZE;
+        USART1_rx_rear = (USART1_rx_rear + 1) % USART1_QUEUE_SIZE;
             
         USART1_rx_front = USART1_rx_rear = 0;   
     USART1_rx_queue[ USART1_rx_front ] = 0;
@@ -469,7 +469,7 @@ void USART1_RXInt_Handler() interrupt USART1_RX_VECT
     else
     {
         USART1_rx_queue [ USART1_rx_rear ] = UDATA;
-        USART1_rx_rear = ++USART1_rx_rear % USART1_QUEUE_SIZE;
+        USART1_rx_rear = (USART1_rx_rear + 1) % USART1_QUEUE_SIZE;
     }
 }
 
@@ -490,7 +490,7 @@ void USART1_TXInt_Handler() interrupt USART1_TX_VECT
     else
     {
         UDATA = USART1_tx_queue [ USART1_tx_front ];
-        USART1_tx_front = ++USART1_tx_front % USART1_QUEUE_SIZE;
+        USART1_tx_front = (USART1_tx_front + 1) % USART1_QUEUE_SIZE;
     }
 }
 

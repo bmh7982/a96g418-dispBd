@@ -21,7 +21,7 @@
 
 #if (I2C_ENABLE == 1)
 
-#define REG_BOOT_JUMP = 0xF0
+#define REG_BOOT_JUMP 0xF0
 enum{
 /*  0   */REG_KEY_ID_1,
 /*  1   */REG_KEY_ID_2,
