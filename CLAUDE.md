@@ -83,6 +83,7 @@ Touch sensing end is polled via `ts.flag.touch_sensing_end` in the main loop.
 
 ## Coding Constraints (MCS-51 / 8-bit)
 
+- **File encoding**: all source files must be saved in **EUC-KR** encoding
 - **No dynamic memory**: `malloc` / `free` are forbidden — no heap
 - **No recursion**: stack is only tens of bytes
 - **No floating point**: no FPU; software emulation is too slow
@@ -97,21 +98,25 @@ These patterns look like bugs but are deliberate. Do not "fix" them without expl
 - **`TASK_TOUCH` fall-through to `TASK_GESTURE`** (`main.c:236`): the missing `break` after `case TASK_TOUCH` is intentional — when gesture is enabled, gesture processing runs immediately after touch in the same cycle. Do not add a `break`.
 - **`#if (FLAG_A | FLAG_B) == 1` pattern**: bitwise OR of 0/1 feature flags then compare to 1 is the project convention for "at least one flag is enabled." Do not change to logical OR (`||`).
 
-## Known Issues (Unresolved)
+## Known Issues
 
-| Location | Description |
-|---|---|
-| `debug.c:88-94` | Case 3 (9600 bps) uses wrong divisor `51` (correct for 38400 bps); should be ~207 |
-| `debug.c:281` | RX buffer `rx_data_buf` has no bounds check on `rx_data_idx` — overflow if ETX never arrives |
-| `user_timer.c:273` | Missing `)` in `if((ut_slide_event_hold_timer == 0)` — compile error when `SLIDE_FUNCTION_EN=1` |
-| `led_driver.c:224` | `digit[]` index derived from `detect_key` nibble can be 0–15; `t_type_digit` table only has 10 entries (0–9) |
-| `a96T418_wdt.c:38-61` | `WDT_Initial()` settings are immediately overwritten by `WDT_Set_4sec_Reset()`; first call is dead code |
+현재 미해결 이슈 없음.
+
+### 해결된 이슈 이력
+
+| Location | Description | Status |
+|---|---|---|
+| `debug.c:88-94` | Case 3 (9600 bps) divisor `51` → `207` 수정 | ✅ Fixed |
+| `debug.c:281` | `rx_data_idx` 경계 검사 추가 | ✅ Fixed |
+| `user_timer.c:273` | `if((ut_slide_event_hold_timer == 0)` 괄호 — 현재 코드에서 정상 확인 | ✅ Verified |
+| `led_driver.c:224` | `digit[]` 인덱스 0–9 클램핑 추가 | ✅ Fixed |
+| `a96T418_wdt.c:38-61` | `WDT_Initial()` dead code — `main.c`에서 호출 제거 | ✅ Fixed |
 
 ## Feature Activation Requirements
 
 | Feature Flag | Additional Work Required |
 |---|---|
-| `SLIDE_FUNCTION_EN=1` | Add `gesture.c` / `gesture.h`; fix missing `)` bug in `user_timer.c:273` first |
+| `SLIDE_FUNCTION_EN=1` | Add `gesture.c` / `gesture.h` |
 | `WHEEL_FUNCTION_EN=1` | Add `gesture.c` / `gesture.h` |
 | `UL60730_SELF_TEST_EN=1` | Add `UL60730_user_V01.h` and the separate UL60730 library |
 | `I2C_ENABLE=1` | Usable standalone or alongside `UART_ENABLE` |

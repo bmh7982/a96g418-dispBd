@@ -79,7 +79,6 @@ enum  i2c_interrupt_status{
 
 void I2C_Init(uint8_t ch, uint32_t speed, uint8_t addr, uint8_t ack);
 void I2C_Init_in_INT(uint8_t ch, uint32_t speed, uint8_t addr, uint8_t ack);
-uint32_t Clock_GetSystemFreq(void);
 void USI_I2C_InterruptHandler(uint8_t ch);
 
 #endif  /* End of __USI_I2C_H_ */

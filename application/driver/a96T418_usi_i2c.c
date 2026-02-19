@@ -19,11 +19,12 @@
 *******************************************************************************/
 #include <intrins.h>
 #include "A96T418_usi_i2c.h"
-#include "A96T418.h" 
+#include "A96T418.h"
 #include "RegisterMap.h"
 #include "user_function.h"
 #include "touch_lib.h"
 #include "common.h"
+#include "a96T418_clock.h"
 
 #if (I2C_ENABLE == 1)
 
@@ -43,9 +44,6 @@ bit g_sub_add_flag = 0;
 bit g_sub_addr_pre_flag=0;
 static uint8_t g_i2c_sub_addr = 0;
 
-static uint32_t shift=0;
-static uint32_t sysclk=0;
-
 
 /*******************************************************************************
 * Private Function Prototype
@@ -59,34 +57,12 @@ static void USI_I2C_SlaveProcessData(uint8_t ch);
 * @param   ch       This parameter contains the channel of USI peripheral.
 * @param   speed            This parameter contains the buadrate of i2c.
 * @param   addr This parameter contains the slave address of i2c(address[7:1]bit)
-* @param   ack  This parameter contains the enable of acknowledge signal. 
+* @param   ack  This parameter contains the enable of acknowledge signal.
 *
 *                   - I2C_ACK_DISABLE = 0
 *                   - I2C_ACK_ENABLE = 1
 * @return       None
 */
-
-uint32_t Clock_GetSystemFreq(void)
-{
-    shift = (OSCCR>>3)&0x07; 
-
-    if(shift>5) 
-        shift=5;
-    shift=5-shift;
-    switch(SCCR&0x03) {
-    case 0 : sysclk=16000000UL>>shift;
-        break;
-    case 1 : 
-            break;
-    case 2 : sysclk=32768UL;
-        break;
-    case 3 : sysclk=128000UL;
-        break;
-    }
-    return sysclk;
-    
-    //return SYSTEM_CLOCK;
-}
 
 void I2C_Init(uint8_t ch, uint32_t speed, uint8_t addr, uint8_t ack)
 {
@@ -195,8 +171,8 @@ void I2C_Init_in_INT(uint8_t ch, uint32_t speed, uint8_t addr, uint8_t ack)
 */
 static void USI_I2C_SlaveProcessData(uint8_t ch)
 {
-    uint8_t i2c_status;
-    
+    uint8_t i2c_status = 0;
+
     if(ch == I2C_CH0)
     {
         i2c_status = USI0ST2;
@@ -207,9 +183,16 @@ static void USI_I2C_SlaveProcessData(uint8_t ch)
         g_sub_addr_pre_flag=0;                       // defence I2C fail 
 
         if(i2c_status & TMODE)                       // step 3-1.Slave Address + Read
-        { 
-            USI0DR = RegMap[g_i2c_sub_addr];
-            g_i2c_sub_addr++;
+        {
+            if(g_i2c_sub_addr < REG_MAX)
+            {
+                USI0DR = RegMap[g_i2c_sub_addr];
+                g_i2c_sub_addr++;
+            }
+            else
+            {
+                USI0DR = 0x77;
+            }
         }
         else
         {                                           // step 1. Slave Address + Wrtie
@@ -273,8 +256,8 @@ static void USI_I2C_SlaveProcessData(uint8_t ch)
 */
 void USI_I2C_InterruptHandler(uint8_t ch)
 {
-    uint8_t i2c_status, i2c_operation;
-    
+    uint8_t i2c_status = 0, i2c_operation = 0;
+
     if(ch == I2C_CH0)
     {
         i2c_status = USI0ST2;

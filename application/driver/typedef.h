@@ -67,7 +67,7 @@ typedef unsigned long   DWORD;
 #define S16_MIN     (-32768)
 #define U32_MAX     (4294967295uL)
 #define S32_MAX     (2147483647)
-#define S32_MIN     (-2147483648uL)
+#define S32_MIN     (-2147483647 - 1)
 
 typedef enum { FALSE = 0, TRUE = !FALSE } bool, BOOL;
 typedef enum { LOW = 0, HIGH = !LOW } PortStatus;

@@ -357,8 +357,8 @@ void Port_SetOutputTogglepin(uint8_t port, uint8_t pin)
 */
 uint8_t Port_GetInputpinValue(uint8_t port, uint8_t pin)
 {
-    uint8_t result;
-        
+    uint8_t result = 0;
+
     switch(port)
     {
         case 0:

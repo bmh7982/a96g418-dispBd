@@ -174,8 +174,7 @@ void Init_User_Function(void)
 #endif
 
 #if (WDT_ENABLE == 1)
-    WDT_Initial(WDT_FREE_RUN, WDT_BIT_OVER);   // ÀÌ°ÍÀº ¾Æ·¡ÇÔ¼ö ¶§¹®¿¡ ÀÇ¹Ì°¡ ¾ø´Ù.
-    WDT_Set_4sec_Reset();   // ÀÌ°ÍÀº WDT_Initial() ÇÔ¼öÀÇ WDTCRÀ» Áö¿ì±â ¶§¹®¿¡ 
+    WDT_Set_4sec_Reset();   // BIT + WDTCR + WDTDR ì„¤ì • (WDT_Initial()ì€ ì¦‰ì‹œ ë®ì–´ì“°ì´ë¯€ë¡œ ìƒëžµ)
     WDT_ConfigureInterrupt(WDT_INT_EN);
     WDT_Start();
 #endif
@@ -233,9 +232,9 @@ void main(void)
                     #endif
                     ts.flag.touch_sensing_end = 0;
                 }
-				// break; °¡ ´©¶ôµÈ °ÍÀÎÁö ½ÇÁ¦·Î ºÒÆÓ¿äÇÑ °ÍÀÎÁö È®ÀÎÇÒ °Í
+				// break; ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ó¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
             case TASK_GESTURE :
-				//Ç×»ó ½ÇÇàÇÏÁö ¾ÊÀ½
+				//ï¿½×»ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                 #if (SLIDE_FUNCTION_EN | WHEEL_FUNCTION_EN)
                 GESTURE_Do_Task(&diff_data[0]);
                 #endif

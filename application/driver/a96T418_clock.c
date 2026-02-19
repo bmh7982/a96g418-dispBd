@@ -174,6 +174,8 @@ uint32_t Clock_GetSystemFreq(void)
     switch(SCCR&0x03) {
     case SCCR_IRC_16MHZ : sysclk=16000000UL>>shift;
         break;
+    case 1 : sysclk=0UL;    /* reserved / not used */
+        break;
     case SCCR_EXT_SOSC : sysclk=32768UL;
         break;
     case SCCR_IRC_128KHZ : sysclk=128000UL;

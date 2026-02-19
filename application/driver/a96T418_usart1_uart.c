@@ -88,10 +88,9 @@ char USART1_rx_queue_is_empty()
 *                   - USART1_TX_MODE = 2
 * @return  None
 */
-    uint32_t buadrate_val = 0, tttt, tttt2, tttt3 ;
 void USART1_Initial(uint32_t speed, uint8_t data_length, uint8_t stop_bits, uint8_t parity, uint8_t mode)
 {
-    //uint32_t buadrate_val = 0;
+    uint32_t buadrate_val = 0;
     uint8_t temp_reg, temp_reg2;
     
     temp_reg = UCTRL1;
@@ -123,11 +122,7 @@ void USART1_Initial(uint32_t speed, uint8_t data_length, uint8_t stop_bits, uint
         buadrate_val = ((Clock_GetSystemFreq() / speed )  >> 4) * 10;
     }
     
-    tttt=Clock_GetSystemFreq();
-    tttt2=speed;
-    tttt3=(Clock_GetSystemFreq() / speed );
-        
-    buadrate_val = ((buadrate_val + 5) / 10) - 1; //round    
+    buadrate_val = ((buadrate_val + 5) / 10) - 1; //round
     
     if(!(UCTRL1 & 0x40)) //Not Synchronous mode(USART)
         USTAT   |= SOFTRST;         // USART block reset
@@ -447,28 +442,22 @@ void USART1_CompensationBaudrate(uint16_t fpcg_val, uint8_t enable)
 // interrupt routines
 //==============================================================================
 void USART1_RXInt_Handler() interrupt USART1_RX_VECT
-{   
-    uint8_t temp, temp2;
-    
+{
+    uint8_t temp;
+    uint8_t rx_data;
+
     temp    = USTAT;
-    temp2   = UCTRL2;
-    
+    rx_data = UDATA;    /* read once to clear HW receive flag */
+
     if ( USART1_rx_queue_is_full () )
     {
-        if ((temp & DOR )||(temp & FE )||(temp & PE ))
-        {
-            USART1_rx_queue [ USART1_rx_rear ] = UDATA;
-            USART1_rx_rear = (USART1_rx_rear + 1) % USART1_QUEUE_SIZE;
-        }
-        USART1_rx_queue [ USART1_rx_rear ] = UDATA;
-        USART1_rx_rear = (USART1_rx_rear + 1) % USART1_QUEUE_SIZE;
-            
-        USART1_rx_front = USART1_rx_rear = 0;   
-    USART1_rx_queue[ USART1_rx_front ] = 0;
+        /* Overflow: reset queue so next byte starts fresh */
+        USART1_rx_front = USART1_rx_rear = 0;
+        USART1_rx_queue[0] = 0;
     }
     else
     {
-        USART1_rx_queue [ USART1_rx_rear ] = UDATA;
+        USART1_rx_queue [ USART1_rx_rear ] = rx_data;
         USART1_rx_rear = (USART1_rx_rear + 1) % USART1_QUEUE_SIZE;
     }
 }
