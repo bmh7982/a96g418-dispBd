@@ -3274,8 +3274,12 @@ sfr     UDATA       =   0xFD;       // USART Data Register
 #define DISPLAYRAM7L        *(volatile uint8_t xdata *) 0x2F21
 #define DISPLAYRAM7M        *(volatile uint8_t xdata *) 0x2F22
 
-#define CCSIREF         *(volatile uint8_t xdata *) 0x2F58
-#define CCSCOARSE       *(volatile uint8_t xdata *) 0x2F30  
+#define CCSIREF             *(volatile uint8_t xdata *) 0x2F58
+#define CCSCOARSE           *(volatile uint8_t xdata *) 0x2F30  
+
+#define TEST_COM            *(volatile uint8_t xdata *) 0x2F7C    //sg
+#define TEST_SEG0           *(volatile uint8_t xdata *) 0x2F7D    //sg
+#define TEST_SEG1           *(volatile uint8_t xdata *) 0x2F7E    //sg
 
 // LEDCON1 (LED Control Register)
 #define LEDST   (1<<0)  //LED start 

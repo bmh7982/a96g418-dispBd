@@ -71,9 +71,64 @@ The `driver/` files were sourced from Example_STKS. Note: `a96T418_usi_i2c.c/.h`
 
 ### Interrupt Architecture
 
-- **Timer interrupt** — drives LED scan and triggers touch sensing cycle
-- **UART RX interrupt** — buffered receive for debug packets
-- Touch sensing end is polled via `ts.flag.touch_sensing_end` in the main loop
+| Vector | Source | Handler | Location |
+|---|---|---|---|
+| `T0_MATCH_VECT` | Timer0 (1 ms tick) | `Timer0_ISR` | `user_timer.c` |
+| `LED_VECT` | LED scan complete | `LED_ISR` | `led_driver.c` |
+| `TOUCH_VECT` | Touch sensing complete | `TOUCH_IRQHandler` | `touch_config.c` |
+| `USI0_RX_VECT` | UART RX | `USI0RX_ISR` | `debug.c` |
+| `USI0_TX_VECT` | UART TX | `USI0TX_ISR` | `debug.c` |
+
+Touch sensing end is polled via `ts.flag.touch_sensing_end` in the main loop.
+
+## Coding Constraints (MCS-51 / 8-bit)
+
+- **No dynamic memory**: `malloc` / `free` are forbidden — no heap
+- **No recursion**: stack is only tens of bytes
+- **No floating point**: no FPU; software emulation is too slow
+- **Keil memory qualifiers**: use `idata` (internal RAM), `xdata` (external RAM), `code` (ROM flash) where appropriate
+- **`uint32_t` atomicity**: 8-bit MCU requires multiple cycles for 32-bit operations — not atomic in ISR context; protect with interrupt disable/enable (`IE2`)
+
+## ⚠️ Do Not Modify — Intentional Patterns
+
+These patterns look like bugs but are deliberate. Do not "fix" them without explicit instruction.
+
+- **`EA = 1` inside ISRs** (`LED_ISR`, `Timer0_ISR`, `TOUCH_IRQHandler`): re-enables global interrupts to allow nested interrupts. Required for correct time-division operation between LED and touch. Do not remove.
+- **`TASK_TOUCH` fall-through to `TASK_GESTURE`** (`main.c:236`): the missing `break` after `case TASK_TOUCH` is intentional — when gesture is enabled, gesture processing runs immediately after touch in the same cycle. Do not add a `break`.
+- **`#if (FLAG_A | FLAG_B) == 1` pattern**: bitwise OR of 0/1 feature flags then compare to 1 is the project convention for "at least one flag is enabled." Do not change to logical OR (`||`).
+
+## Known Issues (Unresolved)
+
+| Location | Description |
+|---|---|
+| `debug.c:88-94` | Case 3 (9600 bps) uses wrong divisor `51` (correct for 38400 bps); should be ~207 |
+| `debug.c:281` | RX buffer `rx_data_buf` has no bounds check on `rx_data_idx` — overflow if ETX never arrives |
+| `user_timer.c:273` | Missing `)` in `if((ut_slide_event_hold_timer == 0)` — compile error when `SLIDE_FUNCTION_EN=1` |
+| `led_driver.c:224` | `digit[]` index derived from `detect_key` nibble can be 0–15; `t_type_digit` table only has 10 entries (0–9) |
+| `a96T418_wdt.c:38-61` | `WDT_Initial()` settings are immediately overwritten by `WDT_Set_4sec_Reset()`; first call is dead code |
+
+## Feature Activation Requirements
+
+| Feature Flag | Additional Work Required |
+|---|---|
+| `SLIDE_FUNCTION_EN=1` | Add `gesture.c` / `gesture.h`; fix missing `)` bug in `user_timer.c:273` first |
+| `WHEEL_FUNCTION_EN=1` | Add `gesture.c` / `gesture.h` |
+| `UL60730_SELF_TEST_EN=1` | Add `UL60730_user_V01.h` and the separate UL60730 library |
+| `I2C_ENABLE=1` | Usable standalone or alongside `UART_ENABLE` |
+
+## LED / Touch Parameter Modification
+
+- **LED COM/SEG lines**: edit only `COMxx_EN` / `SEGxx_EN` macros in `user_function.h`.
+  The derived macros (`P*_COM_IO`, `P*_SEG_IO`, `COMSEL_*`, `SEGSEL_*`) are auto-calculated — do not edit them directly.
+- **Touch thresholds**: edit `TS_CH_CFG[ch][THRESHOLD]` in `touch_config.h`
+- **Hold-key release time**: `TIMER_HOLD_KEY_RELEASE` in `user_function.h` (unit: ms)
+
+## UART Debug Protocol (500 kbps)
+
+**TX (firmware → PC):** `3A | LEN | 00 10 | KEY | CYCLE | DATA... | CHECKSUM(2B) | 0D 0A`
+
+**RX (PC → firmware):** `02 | CMD | MSG... | 03`
+- CMD `'R'` (0x52): data request — sets `mask`, `start_idx`, `ch_cnt` in `dbg`
 
 ## Notes
 
@@ -81,3 +136,4 @@ The `driver/` files were sourced from Example_STKS. Note: `a96T418_usi_i2c.c/.h`
 - `TS_LED_TIME_DIV=1` means touch and LED share timer time-slicing; LED active time = 10 ms, touch active time = 5 ms.
 - UL60730 safety self-test is disabled (`UL60730_SELF_TEST_EN=0`) and requires a separate library if enabled.
 - Gesture functions (slide/wheel) are disabled; enabling them requires adding `gesture.c/.h`.
+- WDT is kicked only in `TASK_TOUCH` (`WDT_ClearCountData()`); the round-robin loop must complete within 4 seconds or the MCU resets.

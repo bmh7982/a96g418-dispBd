@@ -176,7 +176,7 @@ void Init_User_Function(void)
 #if (WDT_ENABLE == 1)
     WDT_Initial(WDT_FREE_RUN, WDT_BIT_OVER);
     WDT_Set_4sec_Reset();
-    WDT_ConfigureInterrrupt(WDT_INT_EN);
+    WDT_ConfigureInterrupt(WDT_INT_EN);
     WDT_Start();
 #endif
 
@@ -194,9 +194,9 @@ void main(void)
     
     DI();
     
-    // system clock 16Mhax
+    // system clock 16MHz
     SCCR = Internal_16MHz_OSC;
-    OSCCR = Divider_16MHz;
+    OSCCR = Divider_16MHz;   // fx = 16MHz
     
     Init_GPIO(); 
     
@@ -233,6 +233,7 @@ void main(void)
                     #endif
                     ts.flag.touch_sensing_end = 0;
                 }
+				// break; 가 누락된 것인지 실제로 불팰요한 것인지 확인할 것
             case TASK_GESTURE :
 				//항상 실행하지 않음
                 #if (SLIDE_FUNCTION_EN | WHEEL_FUNCTION_EN)

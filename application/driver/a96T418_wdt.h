@@ -55,7 +55,7 @@ void WDT_Initial(uint8_t rst_on, uint8_t wdtck);
 void WDT_Set_4sec_Reset(void);
 void WDT_ClearCountData(void);
 void WDT_Start(void);
-void WDT_ConfigureInterrrupt(uint8_t enable);
+void WDT_ConfigureInterrupt(uint8_t enable);
 #endif
 #endif  // __WDT_H_
 /* --------------------------------- End Of File ------------------------------ */

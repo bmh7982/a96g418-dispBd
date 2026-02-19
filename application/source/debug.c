@@ -81,19 +81,19 @@ void DBG_Set_Baudrate (uint8_t baud)
     switch (baud)
     {
         case 0 :
-            USI0BD = 3;     /* 500000 */
+            USI0BD = 3;     /* 500000 0.0% */
             break;
         case 1 :
-            USI0BD = 16;    /* 115200 */
+            USI0BD = 16;    /* 115200 +2.1% */
             break;
         case 2 :
-            USI0BD = 51;    /* 38400 */
+            USI0BD = 51;    /* 38400 +0.2% */
             break;
         case 3 :
-            USI0BD = 51;    /* 9600 */
+            USI0BD =207;    /* 9600 +0.2% */        //USI0BD = 51;    
             break;
         default :
-            USI0BD = 51;    /* 9600 */
+            USI0BD = 51;    /* 38400 */
             break;
     }
     g_sys_flag.dbg_en = 1;
@@ -279,7 +279,8 @@ uint8_t DBG_RX_Check(uint8_t **ptr)
                 }
                 break;                      
             case DBG_RX_STEP_DATA :                         /* MSG */
-                rx_data_buf[rx_data_idx++] = temp;
+                rx_data_buf[rx_data_idx++] = temp;  // 경계 검사 없음
+													// ETX가 안 오면 DBG_RX_MSG_SIZE 초과 → 스택/변수 덮어쓰기
                 if (temp == DBG_SMARTKEY_SET_ETX)
                 {
                     rx_step = DBG_RX_STEP_STX;

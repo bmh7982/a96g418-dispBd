@@ -88,7 +88,7 @@ void WDT_Start(void)
 *                   - WDT_INT_EN  = 1
 * @return   None
 */
-void WDT_ConfigureInterrrupt(uint8_t enable) 
+void WDT_ConfigureInterrupt(uint8_t enable) 
 {
     if(enable)
         IE3 |= 0x08;

@@ -270,7 +270,7 @@ static void UT_Check_Expire(void)
 #if (SLIDE_FUNCTION_EN == 1)
         if (ut_set_flag & UT_SLIDE_EVENT_HOLD)
         {
-            if((ut_slide_event_hold_timer == 0)
+            if(ut_slide_event_hold_timer == 0)
             {
                 flag |= UT_SLIDE_EVENT_HOLD;
             }

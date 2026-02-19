@@ -261,7 +261,7 @@ void LED_Renew_Data(void)
  * @return      void
  *
  *********************************************************************/
-#define TEST_SEG0   *(volatile uint8_t xdata *) 0x2F7D
+//#define TEST_SEG0   *(volatile uint8_t xdata *) 0x2F7D
 #define DIMM_MINUS  1
 void LED_Init_Reg(void)
 {
