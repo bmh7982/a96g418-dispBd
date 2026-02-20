@@ -291,7 +291,7 @@ void LED_Init_Reg(void)
 
     //PRESD  = 255;     // led clock prescale, 16MHz/(PRESD+1), if 255, 62.5Khz, 16us   
     //COMPWID = 70;     // COM width, led clock/(COMPWID+1) 
-//###GUN : 201007 - TEST_SEG0=0x00, DIMM_MINUS=0x00 -> TEST_SEG0=0xff, DIMM_MINUS=0x11 �� ���� 
+//###GUN : 201007 - TEST_SEG0=0x00, DIMM_MINUS=0x00 -> TEST_SEG0=0xff, DIMM_MINUS=0x11 ?? ???? 
     TEST_SEG0 = 0xff;
     CDIMM0 =    (DIMM_MINUS<<4) |       /* COM1 dimming(-) */
                 (DIMM_MINUS<<0);        /* COM0 */

@@ -47,9 +47,6 @@ MCU : A31T418GDN
 		  |- keil 
 		  |- library
 		  |- source
-		  |-  
-		  |-  
-
 		|- Driver(확장용) 
 	 	: a96T418_.c,h
 		: a96T418_.c,h
